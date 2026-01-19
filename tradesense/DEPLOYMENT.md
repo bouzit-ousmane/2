@@ -235,10 +235,13 @@ tradesense/
 │   ├── schema.sql          # Database schema
 │   ├── seed.py             # Database seed script
 │   └── requirements.txt    # Python dependencies
-├── frontend/               # Next.js frontend (moved to root in deployment)
-├── next.config.js          # Next.js configuration
-├── vercel.json            # Vercel configuration
-└── .env.local             # Environment variables (local only)
+├── app/                      # Next.js App Router
+├── components/               # React components
+├── public/                  # Static assets
+├── next.config.js           # Next.js configuration
+├── vercel.json              # Vercel configuration
+├── package.json             # Node dependencies
+└── .env.local               # Environment variables (local only)
 ```
 
 ## Support
