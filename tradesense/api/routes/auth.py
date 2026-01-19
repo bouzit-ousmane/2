@@ -6,8 +6,10 @@ from models import User
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/register', methods=['POST'])
+@auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'GET':
+        return jsonify({'message': 'Register endpoint reached successfully'}), 200
     try:
         data = request.get_json()
         
@@ -45,8 +47,10 @@ def register():
     except Exception as e:
         return jsonify({'error': f'Registration failed: {str(e)}'}), 500
 
-@auth_bp.route('/login', methods=['POST'])
+@auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return jsonify({'message': 'Login endpoint reached successfully'}), 200
     try:
         data = request.get_json()
         

@@ -10,6 +10,13 @@ load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 
+# Debug logging for Vercel
+@app.before_request
+def log_request_info():
+    app.logger.debug('Headers: %s', request.headers)
+    app.logger.debug('Body: %s', request.get_data())
+    print(f"DEBUG: {request.method} {request.path}")
+
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-dev-secret')
@@ -44,9 +51,8 @@ app.register_blueprint(checkout_bp, url_prefix='/api/checkout')
 def health():
     return jsonify({'status': 'ok', 'message': 'TradeSense API is running'}), 200
 
-# Vercel serverless function handler
-def handler(request):
-    return app(request)
+# The Vercel Python runtime finds the 'app' variable in this file automatically.
+# No special 'handler' function is needed for Flask.
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
