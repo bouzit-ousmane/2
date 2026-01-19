@@ -2,7 +2,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import os
+import sys
 from dotenv import load_dotenv
+
+# Ensure the 'api' directory is in the python path
+api_dir = os.path.dirname(os.path.abspath(__file__))
+if api_dir not in sys.path:
+    sys.path.insert(0, api_dir)
 
 # Load environment variables
 load_dotenv()
@@ -32,13 +38,23 @@ JWTManager(app)
 # init_db()
 
 # Register blueprints
-from routes.auth import auth_bp
-from routes.market import market_bp
-from routes.trades import trades_bp
-from routes.challenges import challenges_bp
-from routes.admin import admin_bp
-from routes.leaderboard import leaderboard_bp
-from routes.checkout import checkout_bp
+try:
+    from routes.auth import auth_bp
+    from routes.market import market_bp
+    from routes.trades import trades_bp
+    from routes.challenges import challenges_bp
+    from routes.admin import admin_bp
+    from routes.leaderboard import leaderboard_bp
+    from routes.checkout import checkout_bp
+except ImportError:
+    # Fallback for some Vercel environments
+    from .routes.auth import auth_bp
+    from .routes.market import market_bp
+    from .routes.trades import trades_bp
+    from .routes.challenges import challenges_bp
+    from .routes.admin import admin_bp
+    from .routes.leaderboard import leaderboard_bp
+    from .routes.checkout import checkout_bp
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(market_bp, url_prefix='/api/market')
