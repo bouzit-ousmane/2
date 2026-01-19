@@ -42,12 +42,17 @@ def execute_many(query, params_list):
     return results
 
 def fetch_one(query, params=None):
-    """Fetch a single row"""
+    """Fetch a single row as a dictionary"""
     result = execute_query(query, params)
-    rows = result.rows
-    return rows[0] if rows else None
+    if not result.rows:
+        return None
+    
+    # Convert Row to dict using zip
+    return dict(zip(result.columns, result.rows[0]))
 
 def fetch_all(query, params=None):
-    """Fetch all rows"""
+    """Fetch all rows as a list of dictionaries"""
     result = execute_query(query, params)
-    return result.rows
+    
+    # Convert all Rows to dicts
+    return [dict(zip(result.columns, row)) for row in result.rows]

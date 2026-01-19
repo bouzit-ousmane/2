@@ -69,10 +69,10 @@ def login():
         return jsonify({
             'access_token': access_token,
             'user': {
-                'id': user_row['id'],
-                'name': user_row['name'],
-                'email': user_row['email'],
-                'role': user_row['role'] if 'role' in user_row.keys() else 'user'
+                'id': user_row.get('id'),
+                'name': user_row.get('name'),
+                'email': user_row.get('email'),
+                'role': user_row.get('role', 'user')
             }
         }), 200
     except Exception as e:
@@ -94,10 +94,10 @@ def get_me():
             
         return jsonify({
             'user': {
-                'id': user_row['id'],
-                'name': user_row['name'],
-                'email': user_row['email'],
-                'role': user_row['role'] if 'role' in user_row.keys() else 'user'
+                'id': user_row.get('id'),
+                'name': user_row.get('name'),
+                'email': user_row.get('email'),
+                'role': user_row.get('role', 'user')
             }
         }), 200
     except Exception as e:
