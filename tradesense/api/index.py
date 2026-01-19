@@ -9,6 +9,7 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 # Debug logging for Vercel
 @app.before_request
@@ -47,10 +48,26 @@ app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(leaderboard_bp, url_prefix='/api/leaderboard')
 app.register_blueprint(checkout_bp, url_prefix='/api/checkout')
 
-# Health check endpoint
 @app.route('/api/health', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'ok', 'message': 'TradeSense API is running'}), 200
+    return jsonify({
+        'status': 'ok', 
+        'message': 'TradeSense API is running',
+        'path': request.path,
+        'url': request.url
+    }), 200
+
+# Catch-all for debugging
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return jsonify({
+        'error': 'Path not found in Flask',
+        'received_path': path,
+        'request_path': request.path,
+        'method': request.method
+    }), 404
 
 # The Vercel Python runtime finds the 'app' variable in this file automatically.
 # No special 'handler' function is needed for Flask.
