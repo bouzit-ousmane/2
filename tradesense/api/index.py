@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import os
@@ -26,8 +26,9 @@ CORS(app)
 JWTManager(app)
 
 # Initialize database connection
-from db import init_db
-init_db()
+# Database initialization is handled per-request in db.py for better serverless performance
+# from db import init_db
+# init_db()
 
 # Register blueprints
 from routes.auth import auth_bp
