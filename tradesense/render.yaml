@@ -1,0 +1,28 @@
+services:
+  # Backend Flask Application
+  - type: web
+    name: tradesense-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///instance/tradesense.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.10.0
+
+  # Frontend Next.js Application
+  - type: web
+    name: tradesense-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://tradesense-backend.onrender.com/api # User will need to update this or use Render service discovery
