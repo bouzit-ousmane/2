@@ -72,7 +72,7 @@ def login():
                 'id': user_row['id'],
                 'name': user_row['name'],
                 'email': user_row['email'],
-                'role': user_row.get('role', 'user')
+                'role': user_row['role'] if 'role' in user_row.keys() else 'user'
             }
         }), 200
     except Exception as e:
@@ -97,7 +97,7 @@ def get_me():
                 'id': user_row['id'],
                 'name': user_row['name'],
                 'email': user_row['email'],
-                'role': user_row.get('role', 'user')
+                'role': user_row['role'] if 'role' in user_row.keys() else 'user'
             }
         }), 200
     except Exception as e:

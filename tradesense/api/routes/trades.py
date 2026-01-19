@@ -120,8 +120,8 @@ def get_trades():
             'quantity': trade['quantity'],
             'price': float(trade['price']),
             'total_value': float(trade['total_value']),
-            'profit_loss': float(trade.get('profit_loss', 0)),
-            'executed_at': trade.get('executed_at')
+            'profit_loss': float(trade['profit_loss']) if 'profit_loss' in trade.keys() else 0,
+            'executed_at': trade['executed_at'] if 'executed_at' in trade.keys() else None
         })
     
     return jsonify({'trades': trades_list})

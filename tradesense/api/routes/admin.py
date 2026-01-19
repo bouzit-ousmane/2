@@ -12,7 +12,7 @@ def admin_required():
         def decorator(*args, **kwargs):
             user_id = get_jwt_identity()
             user = fetch_one('SELECT * FROM users WHERE id = ?', [user_id])
-            if not user or user.get('role') != 'admin':
+            if not user or user['role'] != 'admin':
                 return jsonify({'error': 'Admin access required'}), 403
             return fn(*args, **kwargs)
         # Fix for flask wrapper naming
@@ -34,7 +34,7 @@ def get_all_challenges():
             'start_balance': float(c['start_balance']),
             'current_equity': float(c['current_equity']),
             'status': c['status'],
-            'created_at': c.get('created_at')
+            'created_at': c['created_at'] if 'created_at' in c.keys() else None
         })
     
     return jsonify({'challenges': challenges_list})
@@ -88,8 +88,8 @@ def manage_paypal():
             'UPDATE paypal_settings SET enabled = ?, client_id = ?, client_secret = ?, updated_at = datetime("now") WHERE id = ?',
             [
                 data.get('enabled', setting['enabled']),
-                data.get('client_id', setting.get('client_id')),
-                data.get('client_secret', setting.get('client_secret')),
+                data.get('client_id', setting['client_id'] if 'client_id' in setting.keys() else None),
+                data.get('client_secret', setting['client_secret'] if 'client_secret' in setting.keys() else None),
                 setting['id']
             ]
         )
@@ -97,5 +97,5 @@ def manage_paypal():
         
     return jsonify({
         'enabled': setting['enabled'],
-        'client_id': setting.get('client_id')
+        'client_id': setting['client_id'] if 'client_id' in setting.keys() else None
     })

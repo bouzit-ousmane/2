@@ -37,11 +37,11 @@ def get_active_challenge():
             'current_equity': float(challenge['current_equity']),
             'status': challenge['status'],
             'targets': {
-                'daily_loss_pct': float(challenge.get('max_daily_loss_pct', 5.00)),
-                'total_loss_pct': float(challenge.get('max_total_loss_pct', 10.00)),
-                'profit_target_pct': float(challenge.get('profit_target_pct', 10.00))
+                'daily_loss_pct': float(challenge['max_daily_loss_pct']) if 'max_daily_loss_pct' in challenge.keys() else 5.0,
+                'total_loss_pct': float(challenge['max_total_loss_pct']) if 'max_total_loss_pct' in challenge.keys() else 10.0,
+                'profit_target_pct': float(challenge['profit_target_pct']) if 'profit_target_pct' in challenge.keys() else 10.0
             },
-            'created_at': challenge.get('created_at'),
+            'created_at': challenge['created_at'] if 'created_at' in challenge.keys() else None,
             'trades': [{
                 'id': t['id'],
                 'symbol': t['symbol'],
@@ -49,8 +49,8 @@ def get_active_challenge():
                 'quantity': t['quantity'],
                 'price': float(t['price']),
                 'total_value': float(t['total_value']),
-                'profit_loss': float(t.get('profit_loss', 0)),
-                'executed_at': t.get('executed_at')
+                'profit_loss': float(t['profit_loss']) if 'profit_loss' in t.keys() else 0,
+                'executed_at': t['executed_at'] if 'executed_at' in t.keys() else None
             } for t in trades]
         }
         return jsonify({'challenge': challenge_dict})
@@ -82,7 +82,7 @@ def get_challenge_detail(id):
             'start_balance': float(challenge['start_balance']),
             'current_equity': float(challenge['current_equity']),
             'status': challenge['status'],
-            'created_at': challenge.get('created_at')
+            'created_at': challenge['created_at'] if 'created_at' in challenge.keys() else None
         },
         'trades': [{
             'id': t['id'],
@@ -91,7 +91,7 @@ def get_challenge_detail(id):
             'quantity': t['quantity'],
             'price': float(t['price']),
             'total_value': float(t['total_value']),
-            'profit_loss': float(t.get('profit_loss', 0)),
-            'executed_at': t.get('executed_at')
+            'profit_loss': float(t['profit_loss']) if 'profit_loss' in t.keys() else 0,
+            'executed_at': t['executed_at'] if 'executed_at' in t.keys() else None
         } for t in trades]
     })
